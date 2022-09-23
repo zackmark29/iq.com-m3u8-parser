@@ -2,17 +2,17 @@
 script by zackmark29
 https://github.com/zackmark29
 
-v1.0.1 | 2022-05-21
+v1.0.2 | 2022-09-23
 */
 (function () {
     var movieInfo = playerObject.package.engine.movieinfo.current.vidl;
     movieInfo.forEach(function (i) {
         if (i.playlist) {
             var m3u8Content = i.playlist;
-            var title = Sanitize(GetTitle("h5OrderInfo"));
+            var title = Sanitize(GetTitle());
             var fileSize = FormatBytes(i.vsize);
             var resolution = `${i.realArea.width}x${i.realArea.height}`;
-            var fileName = `${title}.${resolution}.H264.[${fileSize}].m3u8`;
+            var fileName = `${title}${resolution}-[${fileSize}].m3u8`;
 
             SaveToFile(m3u8Content, fileName);
         }
@@ -27,8 +27,16 @@ v1.0.1 | 2022-05-21
         a.click();
     }
 
-    function GetTitle(id) {
-        return document.getElementById(id).innerText;
+    function GetTitle() {
+        var rawTitle = document.getElementsByClassName("intl-play-title")[0].outerText;
+        var parts = rawTitle.split('\n');
+        var title = parts[0];
+        if (rawTitle.toLowerCase().includes("episode")){
+            var ep = rawTitle.match(/episode.[0-9]{1,3}/gi);
+            if (ep != null)
+                title += ep[0];
+        }
+        return title;
     }
 
     function FormatBytes(size) {

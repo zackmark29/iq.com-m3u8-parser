@@ -4,7 +4,11 @@
 
 ## CHANGELOGS
 
-[2022-05-21]
+**[2022-09-23]**
+
+- Fixed getting the correct title
+
+**[2022-05-21]**
 
 - Fixed getting m3u8 content and title
 - Updated bookmarklet version
