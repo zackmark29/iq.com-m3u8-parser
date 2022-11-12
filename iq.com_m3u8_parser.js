@@ -2,27 +2,52 @@
 script by zackmark29
 https://github.com/zackmark29
 
-v1.0.2 | 2022-09-23
+v1.0.3 | 2022-11-13
 */
 (function () {
-    var movieInfo = playerObject.package.engine.movieinfo.current.vidl;
-    movieInfo.forEach(function (i) {
-        if (i.playlist) {
-            var m3u8Content = i.playlist;
-            var title = Sanitize(GetTitle());
-            var fileSize = FormatBytes(i.vsize);
-            var resolution = `${i.realArea.width}x${i.realArea.height}`;
-            var fileName = `${title}${resolution}-[${fileSize}].m3u8`;
+    const movieInfo = playerObject.package.engine.movieinfo.current.vidl;
+    movieInfo.forEach(async info => {
+        var playlist = info.playlist;
+        if (playlist) {
+            const title = Sanitize(GetTitle());
+            const fileSize = FormatBytes(info.vsize);
+            const resolution = `${info.realArea.width}x${info.realArea.height}`;
+            const fileName = `${title}${resolution}-[${fileSize}]`;
+            var extension = "m3u8";
 
-            SaveToFile(m3u8Content, fileName);
+            // flv format
+            if (Array.isArray(playlist)){
+                alert("Segmented urls detected. Note: You should download each segment then combine");
+                const urls = []
+                const baseUrl = "https://data.video.iqiyi.com/videos";
+                const results = await Promise.all(playlist.map(async url => {
+                    const indexUrl = url.l;
+                    const fullurl = baseUrl + indexUrl;
+                    return (await fetch(fullurl)).json();
+                }))
+                
+                // plain format
+                results.forEach(u => { urls.push(u.l) });
+                
+                // aria2c format
+                // results.forEach((url, i) => {
+                //     const aria2cUrl = `${url.l}\n\tout=output_${i+1}.flv`
+                //     urls.push(aria2cUrl)
+                // })
+                
+                extension = "txt";
+                playlist = urls.join("\n");
+            }
+
+            SaveToFile(playlist, fileName, extension);
         }
     });
-    
-    function SaveToFile(data, filename) {
+
+    function SaveToFile(data, filename, extension) {
         var blob = new Blob([data], { type: "text/plain" });
         let a = document.createElement("a");
         a.href = URL.createObjectURL(blob);
-        a.download = filename;
+        a.download = `${filename}.${extension}`;
         a.style.display = "none";
         a.click();
     }

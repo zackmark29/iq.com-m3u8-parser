@@ -4,11 +4,20 @@
 
 ## CHANGELOGS
 
-**[2022-09-23]**
+## `[2022-11-13]`
+
+- Support segmented url (flv format) then save as txt file
+  - e.g. <https://www.iq.com/play/%E8%80%81%E5%B8%AB%E6%99%9A%E4%B8%8A%E5%A5%BD-episode-1-19rrljrmxs?lang=en_us># (need taiwan IP)
+  - You could also uncomment from line 32 (then comment line 30) if you want aria2c download format
+  - `NOTE`: You must download each segment first then merge.
+- Alert if segmented detected
+- Updated bookmarklet
+
+### `[2022-09-23]`
 
 - Fixed getting the correct title
 
-**[2022-05-21]**
+### `[2022-05-21]`
 
 - Fixed getting m3u8 content and title
 - Updated bookmarklet version
@@ -20,8 +29,12 @@
 - Import the bookmarklet in your browser bookmarks
 - Play video and set first the resolution you want to save.  
 (Note: only current resolution will be save. So make sure to set first)
-- Now click the bookmarklet I made or just copy the whole code to your console if you want
+- Now click the bookmarklet I made
+  - or just copy the whole code to your console then hit enter 
+  - or you could drag and drop this javascript code below into your bookmarks bar
 
 ```javascript
-javascript:var%20%24jscomp%3D%24jscomp%7C%7C%7B%7D%3B%24jscomp.scope%3D%7B%7D%3B%24jscomp.createTemplateTagFirstArg%3Dfunction(a)%7Breturn%20a.raw%3Da%7D%3B%24jscomp.createTemplateTagFirstArgWithRaw%3Dfunction(a%2Cc)%7Ba.raw%3Dc%3Breturn%20a%7D%3B(function()%7BplayerObject%5B%22package%22%5D.engine.movieinfo.current.vidl.forEach(function(a)%7Bif(a.playlist)%7Bvar%20c%3Da.playlist%2Cb%3Ddocument.getElementById(%22h5OrderInfo%22).innerText.replaceAll(%22%20%22%2C%22.%22)%3Bvar%20d%3Da.vsize%3Bvar%20e%3DMath.log(d)%2FMath.log(1E3)%7C0%3Bd%3D%2B(d%2FMath.pow(1E3%2Ce)).toFixed(2)%2B(%22kMGTPEZY%22%5Be-1%5D%7C%7C%22%22)%2B%22B%22%3Ba%3Db%2B%22.%22%2B(a.realArea.width%2B%22x%22%2Ba.realArea.height)%2B%22.H264.%5B%22%2Bd%2B%22%5D.m3u8%22%3Bc%3Dnew%20Blob(%5Bc%5D%2C%7Btype%3A%22text%2Fplain%22%7D)%3Bb%3Ddocument.createElement(%22a%22)%3Bb.href%3DURL.createObjectURL(c)%3Bb.download%3Da%3Bb.style.display%3D%22none%22%3Bb.click()%7D%7D)%7D)()%3Bvoid+0
+javascript:void%20function(){(function(){function%20a(b,c,d){var%20e=new%20Blob([b],{type:%22text/plain%22});let%20f=document.createElement(%22a%22);f.href=URL.createObjectURL(e),f.download=`${c}.${d}`,f.style.display=%22none%22,f.click()}function%20b(){var%20a=document.getElementsByClassName(%22intl-play-title%22)[0].outerText,b=a.split(%22\n%22),c=b[0];if(a.toLowerCase().includes(%22episode%22)){var%20d=a.match(/episode.[0-9]{1,3}/gi);null!=d%26%26(c+=d[0])}return%20c}function%20c(a){var%20b=Math.log,c=0|b(a)/b(1e3);return+(a/Math.pow(1e3,c)).toFixed(2)+(%22kMGTPEZY%22[c-1]||%22%22)+%22B%22}function%20d(a){return%20a.replaceAll(%22%20%22,%22.%22)}const%20e=playerObject.package.engine.movieinfo.current.vidl;e.forEach(async%20e=%3E{var%20f=e.playlist;if(f){const%20h=d(b()),i=c(e.vsize),j=`${e.realArea.width}x${e.realArea.height}`;var%20g=%22m3u8%22;if(Array.isArray(f)){alert(%22Segmented%20urls%20detected.%20Note:%20You%20should%20download%20each%20segment%20then%20combine%22);const%20a=[],b=await%20Promise.all(f.map(async%20a=%3E{const%20b=a.l;return(await%20fetch(%22https://data.video.iqiyi.com/videos%22+b)).json()}));b.forEach(b=%3E{a.push(b.l)}),g=%22txt%22,f=a.join(%22\n%22)}a(f,`${h}${j}-[${i}]`,g)}})})()}();
 ```
+
+- if you want to edit the js codes, you can convert it to bookmarklet here: <https://chriszarate.github.io/bookmarkleter/>
