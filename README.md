@@ -7,7 +7,8 @@
 ### `[2023-05-20]`
 
 - Support new playlist format (which able to build the segments and save as m3u8)
-- Changed the JavaScript code to support multiple formats of media playlists, not just M3U8
+- Now support multiple formats of media playlists, not just M3U8
+- Updated bookmarklet
 
 ### `[2022-11-13]`
 
