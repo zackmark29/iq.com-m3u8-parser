@@ -4,7 +4,12 @@
 
 ## CHANGELOGS
 
-## `[2022-11-13]`
+### `[2023-05-20]`
+
+- Support new playlist format (which able to build the segments and save as m3u8)
+- Changed the JavaScript code to support multiple formats of media playlists, not just M3U8
+
+### `[2022-11-13]`
 
 - Support segmented url (flv format) then save as txt file
   - e.g. <https://www.iq.com/play/%E8%80%81%E5%B8%AB%E6%99%9A%E4%B8%8A%E5%A5%BD-episode-1-19rrljrmxs?lang=en_us># (need taiwan IP)

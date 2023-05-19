@@ -1,8 +1,8 @@
 /*
-script by zackmark29
+iq.com m3u8 parser by zackmark29
 https://github.com/zackmark29
 
-v1.0.3 | 2022-11-13
+v1.0.4 | 2023-05-20
 */
 (function () {
     const movieInfo = playerObject.package.engine.movieinfo.current.vidl;
@@ -14,9 +14,29 @@ v1.0.3 | 2022-11-13
             const resolution = `${info.realArea.width}x${info.realArea.height}`;
             const fileName = `${title}${resolution}-[${fileSize}]`;
             var extension = "m3u8";
+            
+            var segment_urls = playlist.urls;
 
-            // flv format
-            if (Array.isArray(playlist)){
+            if (segment_urls){
+                var qdpDict = playlist.qdp;
+                var durations = playlist.durations;
+
+                const m3u8Data = [
+                    "#EXTM3U",
+                    "#EXT-X-TARGETDURATION:10"
+                ]
+
+                for (var i = 0; i < segment_urls.length; i++) {
+                    var baseUrl = segment_urls[i];
+                    var qdpKey = baseUrl.split('.ts')[0].split('/').pop();
+                    var fullUrl = `https:${baseUrl}${qdpDict[qdpKey]}`;
+                    var duration = durations[i];
+                    m3u8Data.push(`#EXTINF:${duration},\n${fullUrl}`);
+                }
+                m3u8Data.push("#EXT-X-ENDLIST");
+                playlist = m3u8Data.join("\n");
+
+            }else if (Array.isArray(playlist)){ // flv format
                 alert("Segmented urls detected. Note: You should download each segment then combine");
                 const urls = []
                 const baseUrl = "https://data.video.iqiyi.com/videos";
@@ -29,7 +49,7 @@ v1.0.3 | 2022-11-13
                 // plain format
                 results.forEach(u => { urls.push(u.l) });
                 
-                // aria2c format
+                // aria2c format (Just edit and enable this if want to save as aria2c format)
                 // results.forEach((url, i) => {
                 //     const aria2cUrl = `${url.l}\n\tout=output_${i+1}.flv`
                 //     urls.push(aria2cUrl)
