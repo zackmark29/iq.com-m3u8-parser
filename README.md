@@ -6,6 +6,7 @@
 
 ### `[2023-05-20]`
 
+- (Optional) Save segments as aria2c for flv playlist format
 - Support new playlist format (which able to build the segments and save as m3u8)
 - Now support multiple formats of media playlists, not just M3U8
 - Updated bookmarklet
